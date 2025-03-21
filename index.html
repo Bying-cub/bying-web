@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>白灵档案馆</title>
+</head>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+    .shell{
+        height: 100vh;
+        overflow-x: hidden;
+        perspective: 3px;
+    }
+    .shell div{
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-style: 30px;
+        letter-spacing: 2px;
+    }
+    .image{
+        transform: translateZ(-1px) scale(1.6);
+        background-size: cover;
+        height: 100vh;
+        z-index: -1;
+    }
+    .text{
+        height: 50vh;
+        background-color: #fff;
+    }
+    .text h1{
+        color: #000;
+    }
+    .heading{
+        z-index: -1;
+        transform: translateY(-30vh) translateZ(1px);
+        color: #fff;
+        font-size: 30px;
+    }
+    .image-container a {
+            color: rgb(0, 148, 253);
+            text-decoration: none;
+            font-size: 2.00em; /* 设置五页字体大小 */
+        }
+</style>
+
+<body>
+    <div class="shell">
+        <div class="image" style="background-image: url('./1.jpg');"></div>
+        <div class="heading">
+            <h1>白灵档案馆</h1>
+        </div>
+        <div class="text">
+            <h1><div class="caption">
+                <a href="C:\Users\白灵\Desktop\888999\分类.html">哲学思考</a></h1>
+        </div>
+
+        <div class="image" style="background-image: url('./2.jpg');"></div>
+        <div class="heading">
+            <h1></h1>
+        </div>
+        <div class="text">
+            <h1><div class="caption">
+                <a href="http://www.bilibi.com">计算机学</a>
+            </h1>
+        </div>
+
+        <div class="image" style="background-image: url('./3.jpg');"></div>
+        <div class="heading">
+            <h1></h1>
+        </div>
+        <div class="text">
+            <h1><div class="caption">
+                <a href="http://www.bilibi.com">数学和物理的讨论</a>
+            </h1>
+        </div>
+
+        <div class="image" style="background-image: url('./4.jpg');"></div>
+        <div class="heading">
+            <h1>ALL of myself.</h1>
+        </div>
+    </div>
+</body>
+
+</html>
