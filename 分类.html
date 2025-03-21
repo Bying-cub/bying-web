@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>人物信息与研究记录</title>
     <style>
-        /* 简约风格 CSS */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
@@ -126,8 +125,6 @@
             background-color: #555;
             color: #fff;
         }
-
-        /* Live2D 容器 */
         #live2d-container {
             position: fixed;
             bottom: 20px;
@@ -202,13 +199,9 @@
             </div>
         </section>
     </main>
-
-    <!-- Live2D 容器 -->
     <div id="live2d-container"></div>
 
     <script>
-        // JavaScript 功能
-        // 搜索功能
         document.getElementById('search-button').addEventListener('click', function() {
             const searchTerm = document.getElementById('search-input').value.toLowerCase();
             const cards = document.querySelectorAll('.card');
@@ -222,8 +215,6 @@
                 }
             });
         });
-
-        // 页面滑动效果
         document.querySelectorAll('.island-nav a').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -233,15 +224,12 @@
             });
         });
 
-        // 分类筛选功能
         const islands = document.querySelectorAll('.island');
         const cards = document.querySelectorAll('.card');
 
         islands.forEach(island => {
             island.addEventListener('click', function() {
-                // 移除所有分类的激活状态
                 islands.forEach(island => island.classList.remove('active'));
-                // 激活当前分类
                 this.classList.add('active');
 
                 const category = this.getAttribute('data-category');
@@ -255,8 +243,6 @@
                 });
             });
         });
-
-        // Live2D 初始化
         function loadLive2D() {
             const script = document.createElement('script');
             script.src = 'https://cdn.jsdelivr.net/npm/live2d-widget@latest/lib/L2Dwidget.min.js';
