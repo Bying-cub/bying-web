@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>古典学术殿堂 | 知识圣殿</title>
+    <style>
+        /* 新增字体和基础样式 */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Uncial+Antiqua&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', serif;
+        }
+
+        body {
+            background: url('https://source.unsplash.com/random/1920x1080/?marble') fixed;
+            background-size: cover;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            color: #3d2b1f;
+        }
+
+        /* 维多利亚风格边框 */
+       .victorian-border {
+            position: relative;
+            padding: 20px;
+            border: 3px solid #5d4a3c;
+            border-image: linear-gradient(45deg, #5d4a3c, #c0a375) 1;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 希腊柱式装饰 */
+       .column-decoration::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 0;
+            width: 20px;
+            height: 100%;
+            background: linear-gradient(90deg, #c0a375, #e5d3b3);
+            border-radius: 10px;
+            box-shadow: 5px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 新版玻璃容器 */
+       .glass-container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin: 2rem;
+            position: relative;
+        }
+
+        /* 维多利亚花纹装饰 */
+       .floral-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        /* 古希腊浮雕按钮 */
+       .relief-button {
+            background: linear-gradient(145deg, #e5d3b3, #c0a375);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            color: #3d2b1f;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* 导航栏新样式 */
+       .nav-bar {
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: rgba(199, 179, 157, 0.9);
+            border-radius: 50px;
+            padding: 1rem 2rem;
+        }
+
+        /* 搜索框古典样式 */
+       .search-box {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #5d4a3c;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #3d2b1f;
+            font-size: 1.1em;
+        }
+
+        /* 分类选择器 */
+       .category-filter {
+            padding: 12px 20px;
+            border: 2px solid #5d4a3c;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #3d2b1f;
+            cursor: pointer;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg .../>');
+            /* 自定义箭头图标 */
+        }
+
+        /* 论文卡片新样式 */
+       .paper-card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            border-radius: 15px;
+            padding: 2rem;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+       .paper-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 新增希腊回纹装饰 */
+       .meander-pattern {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: repeating-linear-gradient(
+                90deg,
+                #5d4a3c 0px,
+                #5d4a3c 10px,
+                transparent 10px,
+                transparent 20px
+            );
+        }
+
+        /* 灵动岛新样式 */
+       .dynamic-island {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 45px;
+            background: rgba(199, 179, 157, 0.9);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #3d2b1f;
+            font-family: 'Uncial Antiqua', cursive;
+            font-size: 1.1em;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+       .paper-card p {
+            height: 200px;
+            overflow-y: scroll;
+        }
+
+        /* 知识图谱模态框样式 */
+       .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+       .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+       .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+       .close:hover,
+       .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+       .modal-body {
+            margin-top: 20px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@9.1.1/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: false });
+    </script>
+</head>
+
+<body>
+    <canvas id="raindrops"></canvas>
+    <div class="floral-pattern"></div>
+
+    <div class="dynamic-island">📜 典藏卷轴: 12</div>
+
+    <div class="nav-bar victorian-border column-decoration">
+        <input type="text" class="search-box" placeholder="智慧搜寻..." id="searchInput">
+        <select class="category-filter" id="categoryFilter">
+            <option value="all">所有领域</option>
+            <option value="philosophy">哲学</option>
+            <option value="mathematics">几何学</option>
+            <option value="astronomy">天文学</option>
+        </select>
+    </div>
+
+    <div class="paper-grid" id="paperContainer">
+        <div class="paper-card glass-container scroll-animation" data-category="philosophy" data-word-url="file:///C:/Users/白灵/Desktop/888999/多元哲学思想融合：从历史溯源到当代启示.docx">
+            <div class="meander-pattern"></div>
+            <h3 style="color: #5d4a3c; margin-bottom: 1rem; font-family: 'Cinzel Decorative', cursive;">
+                一、引言
+            </h3>
+            <p style="color: #3d2b1f; margin-bottom: 1rem; line-height: 1.6;">
+                在人类思想发展的长河中，马克思主义思想、中国儒家与道家思想、德国古典哲学思想以及古希腊哲学等西方哲学体系，各自占据着独特而重要的位置……对多元哲学思想融合的研究，具有重要的理论意义和现实意义。
+            </p>
+            <div style="display: flex; gap: 1rem;">
+                <button class="relief-button" onclick="location.href='文章下载链接'">
+                    📥 获取卷轴
+                </button>
+                <button class="relief-button" onclick="openWordAndShowGraph(this)">
+                    📖 展开阅读
+                </button>
+            </div>
+        </div>
+        <!-- 可继续添加更多文章部分 -->
+    </div>
+
+    <!-- 知识图谱模态框 -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>知识图谱</h2>
+            <div class="mermaid" id="mermaidDiagram">
+                graph LR
+                A[多元哲学思想融合] --> B[历史溯源]
+                A --> C[当代启示]
+                B --> B1[马克思主义思想]
+                B --> B2[中国儒家与道家思想]
+                B --> B3[德国古典哲学思想]
+                B --> B4[古希腊哲学等西方哲学体系]
+            </div>
+            <div class="modal-body" id="documentContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // 修改雨滴颜色为金色
+        function drawRain() {
+            const canvas = document.getElementById('raindrops');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = 'rgba(192, 163, 117, 0.6)';
+            // 其余雨滴代码保持不变...
+        }
+
+        // 搜索功能
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase();
+            const papers = document.querySelectorAll('.paper-card');
+            papers.forEach(paper => {
+                const title = paper.querySelector('h3').textContent.toLowerCase();
+                const content = paper.querySelector('p').textContent.toLowerCase();
+                if (title.includes(searchTerm) || content.includes(searchTerm)) {
+                    paper.style.display = 'block';
+                } else {
+                    paper.style.display = 'none';
+                }
+            });
+        });
+
+        // 分类筛选功能
+        const categoryFilter = document.getElementById('categoryFilter');
+        categoryFilter.addEventListener('change', function () {
+            const selectedCategory = this.value;
+            const papers = document.querySelectorAll('.paper-card');
+            papers.forEach(paper => {
+                const category = paper.dataset.category;
+                if (selectedCategory === 'all' || category === selectedCategory) {
+                    paper.style.display = 'block';
+                } else {
+                    paper.style.display = 'none';
+                }
+            });
+        });
+
+        // 展开阅读后打开 Word 文档并显示知识图谱和文档内容
+        function openWordAndShowGraph(button) {
+            const paperCard = button.closest('.paper-card');
+            const wordUrl = paperCard.dataset.wordUrl;
+            // 打开 Word 文档
+            window.open(wordUrl, '_blank');
+
+            // 显示知识图谱模态框
+            const modal = document.getElementById('myModal');
+            modal.style.display = "block";
+
+            // 获取关闭按钮并添加关闭事件
+            const closeBtn = document.getElementsByClassName("close")[0];
+            closeBtn.onclick = function () {
+                modal.style.display = "none";
+            }
+
+            // 点击模态框外部关闭模态框
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+
+            // 渲染 mermaid 图
+            const mermaidDiagram = document.getElementById('mermaidDiagram');
+            mermaid.render('mermaid-svg', mermaidDiagram.textContent, (svgCode) => {
+                mermaidDiagram.innerHTML = svgCode;
+            });
+
+            // 加载转换后的 HTML 内容
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', 'multiphilosophy.html', true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    document.getElementById('documentContent').innerHTML = xhr.responseText;
+                }
+            };
+            xhr.send();
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('myModal');
+            modal.style.display = "none";
+            document.getElementById('documentContent').innerHTML = '';
+        }
+
+        // 论文卡片模板更新
+        function renderPapers(filteredPapers = papers) {
+            const container = document.getElementById('paperContainer');
+            container.innerHTML = filteredPapers.map(paper => `
+                <div class="paper-card glass-container scroll-animation">
+                    <div class="meander-pattern"></div>
+                    <h3 style="color: #5d4a3c; margin-bottom: 1rem; font-family: 'Cinzel Decorative', cursive;">
+                        ${paper.title}
+                    </h3>
+                    <p style="color: #3d2b1f; margin-bottom: 1rem; line-height: 1.6;">
+                        ${paper.content}
+                    </p>
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="relief-button" onclick="location.href='${paper.download}'">
+                            📥 获取卷轴
+                        </button>
+                        <button class="relief-button" onclick="openWordAndShowGraph(this)">
+                            📖 展开阅读
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+
+</html>    
