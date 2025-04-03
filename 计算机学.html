@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雅典学术 - 论文发布平台</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2C3E50;
+            --accent-color: #E74C3C;
+            --background: #F9F9F9;
+            --text-color: #333;
+            --card-bg: #FFFFFF;
+            --border-color: #EEE;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #BDC3C7;
+            --accent-color: #E74C3C;
+            --background: #1A1A2E;
+            --text-color: #E6E6E6;
+            --card-bg: #16213E;
+            --border-color: #0F3460;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background);
+            color: var(--text-color);
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+            transition: background 0.5s ease, color 0.3s ease;
+        }
+
+        /* 加载动画 */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--background);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100000;
+            transition: opacity 0.5s;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--border-color);
+            border-top: 5px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 主题切换按钮 */
+        .theme-toggle {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            z-index: 10000;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: var(--card-bg);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 10px var(--shadow-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* 导航栏 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px var(--shadow-color);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        [data-theme="dark"] .navbar {
+            background: rgba(26, 26, 46, 0.95);
+        }
+
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid var(--primary-color);
+            border-radius: 30px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--text-color);
+        }
+
+        [data-theme="dark"] #searchInput {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        /* 论文上传表单 */
+        .upload-form {
+            max-width: 800px;
+            margin: 100px auto 2rem;
+            padding: 2rem;
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            transition: all 0.3s;
+        }
+
+        .upload-form h2 {
+            margin-bottom: 1.5rem;
+            color: var(--accent-color);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            background: var(--background);
+            color: var(--text-color);
+            transition: border-color 0.3s;
+            font-size: 16px;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-color);
+            outline: none;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .upload-btn {
+            background: var(--accent-color);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            font-weight: 500;
+            display: block;
+            margin: 2rem auto 0;
+        }
+
+        .upload-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        /* 论文展示区 */
+        .papers-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 6rem 2rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .paper-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .paper-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .paper-card:hover {
+            transform: translateY(-5px) rotateZ(1deg);
+            box-shadow: 0 10px 25px var(--shadow-color);
+        }
+
+        .paper-card:hover::before {
+            left: 100%;
+        }
+
+        .paper-card h2 {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .paper-card p.abstract {
+            margin: 1rem 0;
+            color: var(--text-color);
+            line-height: 1.5;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+        }
+
+        .actions button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .actions button.read-btn {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .actions button.download-btn {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .actions button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px var(--shadow-color);
+        }
+
+        /* 分类标签 */
+        .category-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin: 0.5rem 0.5rem 0 0;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .category-tag:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        /* PDF查看器模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 80vh;
+            background: var(--card-bg);
+            box-shadow: 0 0 30px var(--shadow-color);
+            z-index: 10000;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            font-size: 30px;
+            cursor: pointer;
+            color: var(--primary-color);
+            transition: all 0.3s;
+        }
+
+        .close:hover {
+            color: var(--accent-color);
+            transform: rotate(90deg);
+        }
+
+        /* Live2D 看板娘 */
+        #live2d-widget {
+            position: fixed;
+            bottom: -20px;
+            right: -50px;
+            z-index: 10000;
+            pointer-events: none;
+            transition: all 0.3s;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .papers-container {
+                grid-template-columns: 1fr;
+                padding: 5rem 1rem 1rem;
+            }
+            
+            .upload-form {
+                margin: 80px auto 1rem;
+                padding: 1.5rem;
+            }
+            
+            .theme-toggle {
+                width: 40px;
+                height: 40px;
+                bottom: 20px;
+                left: 20px;
+            }
+        }
+
+        /* 进度条 */
+        .progress-container {
+            width: 100%;
+            height: 5px;
+            background: var(--border-color);
+            margin-top: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--accent-color);
+            width: 0%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载动画 -->
+    <div class="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- 主题切换按钮 -->
+    <button class="theme-toggle" id="themeToggle">🌓</button>
+
+    <nav class="navbar">
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="🔍 搜索论文或输入分类...">
+        </div>
+    </nav>
+
+    <!-- 论文上传表单 -->
+    <section class="upload-form" data-aos="fade-up">
+        <h2>上传新论文</h2>
+        <form id="paperUploadForm">
+            <div class="form-group">
+                <label for="paperTitle">论文标题</label>
+                <input type="text" id="paperTitle" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="paperAuthor">作者</label>
+                <input type="text" id="paperAuthor" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="paperAbstract">摘要</label>
+                <textarea id="paperAbstract" class="form-control" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="paperCategories">分类标签（用空格分隔）</label>
+                <input type="text" id="paperCategories" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="paperFile">上传PDF文件</label>
+                <input type="file" id="paperFile" class="form-control" accept=".pdf" required>
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+            </div>
+            <button type="submit" class="upload-btn">提交论文</button>
+        </form>
+    </section>
+
+    <div class="papers-container" id="papersContainer">
+        <!-- 论文卡片将通过JavaScript动态生成 -->
+    </div>
+
+    <!-- PDF查看器 -->
+    <div id="pdfViewer" class="modal">
+        <span class="close">&times;</span>
+        <embed id="pdfFrame" src="" type="application/pdf" width="100%" height="100%">
+    </div>
+
+    <!-- Live2D容器 -->
+    <div id="live2d-widget"></div>
+
+    <!-- 脚本依赖 -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js"></script>
+
+    <script>
+        // 初始化AOS动画
+        AOS.init({
+            duration: 1000,
+            once: false,
+            easing: 'ease-in-out'
+        });
+
+        // 加载完成后隐藏加载动画
+        window.addEventListener('load', () => {
+            document.querySelector('.loader').style.opacity = '0';
+            setTimeout(() => {
+                document.querySelector('.loader').style.display = 'none';
+            }, 500);
+            
+            // 初始化主题
+            initTheme();
+            // 加载示例论文
+            loadSamplePapers();
+        });
+
+        // 夜间模式切换
+        function initTheme() {
+            const themeToggle = document.getElementById('themeToggle');
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            
+            document.body.setAttribute('data-theme', savedTheme);
+            themeToggle.textContent = savedTheme === 'dark' ? '🌞' : '🌓';
+            
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = document.body.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                document.body.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                themeToggle.textContent = newTheme === 'dark' ? '🌞' : '🌓';
+            });
+        }
+
+        // 搜索功能
+        const searchInput = document.getElementById('searchInput');
+        
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const papers = document.querySelectorAll('.paper-card');
+            
+            papers.forEach(paper => {
+                const categories = paper.dataset.categories.toLowerCase();
+                const title = paper.querySelector('h2').textContent.toLowerCase();
+                const abstract = paper.querySelector('.abstract').textContent.toLowerCase();
+                
+                const match = categories.includes(searchTerm) || 
+                            title.includes(searchTerm) || 
+                            abstract.includes(searchTerm);
+                
+                paper.style.display = match ? 'block' : 'none';
+                AOS.refresh();
+            });
+        });
+
+        // PDF查看器功能
+        function openPDFViewer(pdfPath) {
+            const viewer = document.getElementById('pdfViewer');
+            document.getElementById('pdfFrame').src = pdfPath;
+            viewer.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        document.querySelector('.close').onclick = function() {
+            document.getElementById('pdfViewer').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        window.onclick = function(event) {
+            const viewer = document.getElementById('pdfViewer');
+            if (event.target == viewer) {
+                viewer.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // 分类标签点击筛选
+        function setupCategoryTags() {
+            document.querySelectorAll('.category-tag').forEach(tag => {
+                tag.addEventListener('click', function() {
+                    searchInput.value = this.textContent;
+                    searchInput.dispatchEvent(new Event('input'));
+                });
+            });
+        }
+
+        // 论文上传处理
+        document.getElementById('paperUploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const form = e.target;
+            const formData = new FormData(form);
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            
+            // 验证文件类型
+            const fileInput = document.getElementById('paperFile');
+            if (fileInput.files[0].type !== 'application/pdf') {
+                alert('请上传PDF格式的文件');
+                return;
+            }
+            
+            // 验证文件大小（5MB限制）
+            if (fileInput.files[0].size > 5 * 1024 * 1024) {
+                alert('文件大小不能超过5MB');
+                return;
+            }
+
+            try {
+                submitBtn.disabled = true;
+                submitBtn.textContent = '上传中...';
+                progressContainer.style.display = 'block';
+                
+                // 模拟上传进度
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 5;
+                    progressBar.style.width = `${progress}%`;
+                    
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        setTimeout(() => {
+                            progressContainer.style.display = 'none';
+                            progressBar.style.width = '0%';
+                        }, 500);
+                    }
+                }, 100);
+                
+                // 模拟网络请求延迟
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // 这里应该是实际的上传逻辑
+                console.log('上传数据:', {
+                    title: formData.get('paperTitle'),
+                    author: formData.get('paperAuthor'),
+                    abstract: formData.get('paperAbstract'),
+                    categories: formData.get('paperCategories'),
+                    file: fileInput.files[0].name
+                });
+                
+                // 添加新论文到展示区
+                addNewPaper({
+                    title: document.getElementById('paperTitle').value,
+                    categories: document.getElementById('paperCategories').value,
+                    abstract: document.getElementById('paperAbstract').value,
+                    pdfPath: 'sample.pdf' // 实际应用中应该是上传后的路径
+                });
+                
+                alert('论文上传成功！');
+                form.reset();
+            } catch (error) {
+                console.error('上传错误:', error);
+                alert('上传失败，请重试');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '提交论文';
+            }
+        });
+
+        // 加载示例论文
+        function loadSamplePapers() {
+            const samplePapers = [
+                
+            ];
+            
+            const container = document.getElementById('papersContainer');
+            
+            samplePapers.forEach((paper, index) => {
+                const card = createPaperCard(paper, index);
+                container.appendChild(card);
+            });
+            
+            setupCategoryTags();
+            AOS.refresh();
+        }
+
+        // 创建论文卡片
+        function createPaperCard(paper, index) {
+            const card = document.createElement('div');
+            card.className = 'paper-card';
+            card.dataset.categories = paper.categories;
+            card.dataset.aos = 'fade-up';
+            card.dataset.aosDelay = index * 100;
+            
+            // 创建分类标签
+            const tags = paper.categories.split(' ').map(category => 
+                `<span class="category-tag">${category}</span>`
+            ).join('');
+            
+            card.innerHTML = `
+                <h2>${paper.title}</h2>
+                ${tags}
+                <p class="abstract">${paper.abstract}</p>
+                <div class="actions">
+                    <button onclick="openPDFViewer('${paper.pdfPath}')">在线阅读</button>
+                    <a href="${paper.pdfPath}" download class="download-btn">下载PDF</a>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // 添加新论文
+        function addNewPaper(paper) {
+            const container = document.getElementById('papersContainer');
+            const card = createPaperCard(paper, container.children.length);
+            container.prepend(card);
+            setupCategoryTags();
+            AOS.refresh();
+        }
+
+        // Live2D交互增强
+        window.addEventListener('mousemove', (e) => {
+            const widget = document.getElementById('live2d-widget');
+            const mouseX = e.clientX;
+            const windowWidth = window.innerWidth;
+            
+            if (mouseX < windowWidth * 0.3) {
+                widget.style.transform = 'scaleX(1)';
+            } else {
+                widget.style.transform = 'scaleX(-1)';
+            }
+        });
+    </script>
+</body>
+</html>
