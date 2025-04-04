@@ -1,55 +1,121 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>白灵档案馆</title>
-</head>
-<style>
-    * {
-        padding: 0;
-        margin: 0;
-    }
-    .shell{
-        height: 100vh;
-        overflow-x: hidden;
-        perspective: 3px;
-    }
-    .shell div{
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-style: 30px;
-        letter-spacing: 2px;
-    }
-    .image{
-        transform: translateZ(-1px) scale(1.6);
-        background-size: cover;
-        height: 100vh;
-        z-index: -1;
-    }
-    .text{
-        height: 50vh;
-        background-color: #fff;
-    }
-    .text h1{
-        color: #000;
-    }
-    .heading{
-        z-index: -1;
-        transform: translateY(-30vh) translateZ(1px);
-        color: #fff;
-        font-size: 30px;
-    }
-    .image-container a {
-            color: rgb(0, 148, 253);
-            text-decoration: none;
-            font-size: 2.00em; /* 设置五页字体大小 */
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
         }
-</style>
+
+        html {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .shell {
+            height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+            perspective: 3px;
+        }
+
+        .shell > div {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .image {
+            transform: translateZ(-1px) scale(1.6);
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            width: 100vw;
+            z-index: -1;
+        }
+
+        .text {
+            padding: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .heading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .heading h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .caption a {
+            color: #0094fd;
+            text-decoration: none;
+            font-size: 1.8rem;
+            transition: color 0.3s ease;
+            display: block;
+            margin: 1rem 0;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .caption a:hover {
+            color: #0066cc;
+        }
+
+        @media (max-width: 768px) {
+            html {
+                font-size: 14px;
+            }
+
+            .heading h1 {
+                font-size: 2rem;
+            }
+
+            .image {
+                transform: translateZ(-1px) scale(1.2);
+            }
+
+            .caption a {
+                font-size: 1.4rem;
+            }
+
+            @media (orientation: portrait) {
+                .shell {
+                    perspective: 1px;
+                }
+                .image {
+                    transform: translateZ(-1px) scale(2);
+                }
+            }
+        }
+
+        @media (max-width: 480px) {
+            .heading h1 {
+                font-size: 1.5rem;
+            }
+            
+            .caption a {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
 
 <body>
     <div class="shell">
@@ -57,29 +123,25 @@
         <div class="heading">
             <h1>白灵档案馆</h1>
         </div>
+        
         <div class="text">
-            <h1><div class="caption">
-                <a href="分类.html">哲学思考</a></h1>
+            <div class="caption">
+                <a href="分类.html">哲学思考</a>
+            </div>
         </div>
 
         <div class="image" style="background-image: url('./2.jpg');"></div>
-        <div class="heading">
-            <h1></h1>
-        </div>
         <div class="text">
-            <h1><div class="caption">
+            <div class="caption">
                 <a href="计算机学.html">计算机学</a>
-            </h1>
+            </div>
         </div>
 
         <div class="image" style="background-image: url('./3.jpg');"></div>
-        <div class="heading">
-            <h1></h1>
-        </div>
         <div class="text">
-            <h1><div class="caption">
-                <a href="计算机学.html">数学和物理的讨论</a>
-            </h1>
+            <div class="caption">
+                <a href="数学物理.html">数学和物理的讨论</a>
+            </div>
         </div>
 
         <div class="image" style="background-image: url('./4.jpg');"></div>
@@ -88,5 +150,4 @@
         </div>
     </div>
 </body>
-
 </html>
