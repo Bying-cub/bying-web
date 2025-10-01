@@ -18,6 +18,66 @@
             line-height: 1.5;
         }
 
+        /* 横屏提示 */
+        #orientation-warning {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: white;
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        #orientation-warning p {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        
+        #orientation-warning .rotate-icon {
+            font-size: 3rem;
+            animation: rotate 2s infinite;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(90deg); }
+        }
+
+        /* 视频容器样式 */
+        #video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 1;
+            transition: opacity 2s ease;
+        }
+        
+        #video-container.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        #intro-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         .shell {
             height: 100vh;
             overflow-x: hidden;
@@ -78,7 +138,30 @@
             color: #0066cc;
         }
 
-        @media (max-width: 768px) {
+        /* 横屏样式调整 */
+        @media (max-width: 768px) and (orientation: landscape) {
+            html {
+                font-size: 14px;
+            }
+            
+            .shell {
+                perspective: 1px;
+            }
+            
+            .image {
+                transform: translateZ(-1px) scale(1.2);
+            }
+            
+            .heading h1 {
+                font-size: 2rem;
+            }
+            
+            .caption a {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) and (orientation: portrait) {
             html {
                 font-size: 14px;
             }
@@ -114,15 +197,40 @@
                 font-size: 1.2rem;
             }
         }
+        
+        /* 横屏提示显示条件 */
+        @media (max-width: 768px) and (orientation: landscape) and (max-height: 500px) {
+            #orientation-warning {
+                display: flex;
+            }
+        }
     </style>
 </head>
 
 <body>
+    <!-- 横屏提示 -->
+    <div id="orientation-warning">
+        <div class="rotate-icon">↻</div>
+        <p>为了更好的体验，请将手机旋转至竖屏模式</p>
+    </div>
+
+    <!-- 视频开场容器 -->
+    <div id="video-container">
+        <video id="intro-video" autoplay muted>
+            <!-- 请替换为您自己的视频路径 -->
+            <source src="D:\SteamLibrary\steamapps\workshop\content\431960\3382039692\鸣潮 · 守岸人 睁眼.mp4" type="video/mp4">
+            您的浏览器不支持视频播放。
+        </video>
+    </div>
+
+    <!-- 网站内容 -->
     <div class="shell">
-        <div class="image" style="background-image: url('./1.jpg');"></div>
-        <div class="heading">
+        <div id="video-container">
+        <video id="intro-video" autoplay muted>
+            <!-- 请替换为您自己的视频路径 -->
+            <source src="d0b82f4f-7051-47c0-aacb-1f1d62b34bad.mp4" type="video/mp4">
             <h1>白灵档案馆</h1>
-        </div>
+        </div></video>
         
         <div class="text">
             <div class="caption">
@@ -149,5 +257,61 @@
             <h1>ALL of myself.</h1>
         </div>
     </div>
+
+    <script>
+        // 等待页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            const videoContainer = document.getElementById('video-container');
+            const introVideo = document.getElementById('intro-video');
+            const orientationWarning = document.getElementById('orientation-warning');
+            
+            // 检测设备是否为移动设备
+            function isMobileDevice() {
+                return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            }
+            
+            // 检测屏幕方向并显示提示
+            function checkOrientation() {
+                if (isMobileDevice() && window.innerHeight < 500 && window.innerWidth > window.innerHeight) {
+                    orientationWarning.style.display = 'flex';
+                } else {
+                    orientationWarning.style.display = 'none';
+                }
+            }
+            
+            // 初始检测
+            checkOrientation();
+            
+            // 监听屏幕方向变化
+            window.addEventListener('resize', checkOrientation);
+            window.addEventListener('orientationchange', checkOrientation);
+            
+            // 监听视频结束事件
+            introVideo.addEventListener('ended', function() {
+                // 添加淡出类名，触发CSS过渡动画
+                videoContainer.classList.add('fade-out');
+                
+                // 过渡动画结束后隐藏视频容器
+                setTimeout(function() {
+                    videoContainer.style.display = 'none';
+                }, 2000); // 与CSS过渡时间保持一致
+            });
+            
+            // 如果视频加载失败或无法播放，确保视频容器最终会隐藏
+            introVideo.addEventListener('error', function() {
+                videoContainer.style.display = 'none';
+            });
+            
+            // 设置超时，以防视频无法正常播放
+            setTimeout(function() {
+                if (!videoContainer.classList.contains('fade-out')) {
+                    videoContainer.classList.add('fade-out');
+                    setTimeout(function() {
+                        videoContainer.style.display = 'none';
+                    }, 2000);
+                }
+            }, 15000); // 15秒后无论如何都会隐藏视频容器
+        });
+    </script>
 </body>
 </html>
